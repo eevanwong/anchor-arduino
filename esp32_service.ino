@@ -98,7 +98,7 @@ String padPayload(String payload) {
 String encryptPayload(String payload) {
   generateIV();
 
-  // Create a copy of the IV since the original IV will be modified during encryption.
+  // Create a copy of the IV since the original IV will be modified during encryption: https://forum.arduino.cc/t/encryption-with-aeslib/1268840.
   byte iv_copy[16];
   memcpy(iv_copy, iv, 16);
   payload = padPayload(payload);
