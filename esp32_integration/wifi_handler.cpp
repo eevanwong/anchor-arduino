@@ -66,8 +66,8 @@ static String encryptPayload(String payload) {
 // Function to connect to WiFi
 void connectToNetwork() {
   // Network credentials - scoped to this file
-  static const char* ssid     = "Gustav's Castle";
-  static const char* password = "pass";
+  static const char* ssid     = "Pixel_2809";
+  static const char* password = "test123!";
   
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi...");
