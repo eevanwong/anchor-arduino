@@ -15,4 +15,11 @@ void initializeNFC();
 bool readCardUID(uint8_t* uid, uint8_t& uidLength);
 bool startCardDetection();
 
+// Data structure to hold NFC credentials.
+struct NFCCredentials {
+  String user_name;
+  String user_email;
+  String user_phone;
+};
+
 #endif // NFC_HANDLER_H

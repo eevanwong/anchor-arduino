@@ -39,3 +39,12 @@ bool readCardUID(uint8_t* uid, uint8_t& uidLength) {
 bool startCardDetection() {
     return pn532temp.startPassiveTargetIDDetection(PN532_MIFARE_ISO14443A);
 }
+
+// Function to extract NFC credentials from a data buffer
+NFCCredentials extractNFCCredentials(const uint8_t* data) {
+    NFCCredentials creds;
+    creds.user_name  = String((char*)data);
+    creds.user_email = String((char*)(data + 32));
+    creds.user_phone = String((char*)(data + 64));
+    return creds;
+}

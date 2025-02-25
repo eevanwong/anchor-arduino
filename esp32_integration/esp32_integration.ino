@@ -3,6 +3,7 @@
 #include "wifi_handler.h"
 #include "motor_handler.h"
 #include "light_handler.h"
+#include "cache_handler.h"
 #include <esp_sleep.h>
 
 // ------------------------------------------
@@ -11,6 +12,7 @@
 #define WAKEUP_GPIO GPIO_NUM_2  // RTC IO pin for wake-up
 
 uint8_t LOCK_STATE = 0; // 0 - not locked
+static unsigned long lastClearTime = 0;
 // ------------------------------------------
 // Setup Function
 // ------------------------------------------
@@ -57,12 +59,19 @@ void setup() {
         // Serial.println(F("Reading Block 0:"));
         pn532temp.PrintHexChar(data, 16);
         Serial.println();
+
+        // Extract NFC credentials from data.
+        NFCCredentials creds = extractNFCCredentials(data);
+
+        // Cache the NFC credentials.
+        String creds_str = creds.user_name + "," + creds.user_email + "," + creds.user_phone;
+        cacheData("nfc", "nfc_credentials", creds_str.c_str());
                   
         /// HERE -> WIFI REQUEST BASED ON LOCK STATE
         LockResponse res;
         if (LOCK_STATE == 0) {
           Serial.println(F("Locking Bike at Rack 1..."));
-          LockRequest req = {1, "John Doe", "johndoe@gmail.com", "1234561234"};
+          LockRequest req = {1, creds.user_name, creds.user_email, creds.user_phone};
           res = lock(req);
     
           if (res.error == "") {
@@ -73,7 +82,7 @@ void setup() {
             motor_lock();
           }
         } else {
-          UnlockRequest req = {1, "John Doe", "johndoe@gmail.com", "1234561234"};
+          UnlockRequest req = {1, creds.user_name, creds.user_email, creds.user_phone};
           res = unlock(req);
           if (res.error == "") {
             // Serial.printf(F("Rack ID: %d\n"), res.rack_id);
@@ -119,6 +128,12 @@ void setup() {
 
   // Go to sleep
   Serial.println("Going to sleep now...");
+  
+  // Clear the cache if an hour has passed.
+  if (millis() - lastClearTime >= 3600000) {
+    clearCache("nfc", "nfc_credentials");
+    lastClearTime = millis();
+  }
   esp_deep_sleep_start();
 
   // This line should not execute after deep_sleep
