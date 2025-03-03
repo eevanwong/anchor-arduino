@@ -25,6 +25,8 @@ void initializeNFC() {
 
     pn532temp.setPassiveActivationRetries(0xFF); // Ensure reliable activation
     pn532temp.SAMConfig();                       // Configure the SAM
+    
+    pinMode(WAKEUP_GPIO, INPUT);  // For interrupt
 }
 
 // Function to read a card's UID

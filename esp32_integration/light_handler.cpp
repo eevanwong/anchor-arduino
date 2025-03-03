@@ -2,7 +2,7 @@
 #include "light_handler.h"
 
 void initializeLED() {
-    // initialize digital pins for green, yellow, and red
+  // initialize digital pins for green, yellow, and red
   pinMode(G_PIN, OUTPUT);
   pinMode(Y_PIN, OUTPUT);
   pinMode(R_PIN, OUTPUT);
@@ -17,7 +17,6 @@ void yellowOff() {
 }
 
 void toggleGreen() {
-    yellowOff();
     digitalWrite(G_PIN, HIGH);
     delay(1000); 
     digitalWrite(G_PIN, LOW);

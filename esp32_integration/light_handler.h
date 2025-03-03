@@ -1,9 +1,9 @@
 #ifndef LIGHT_HANDLER_H
 #define LIGHT_HANDLER_H
 
-#define G_PIN GPIO_NUM_5
+#define G_PIN 2
 #define Y_PIN GPIO_NUM_18
-#define R_PIN GPIO_NUM_19
+#define R_PIN 4
 
 void initializeLED();
 void yellowOn();
