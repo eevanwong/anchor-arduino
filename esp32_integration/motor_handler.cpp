@@ -21,10 +21,14 @@ void activate_motor() {
   delay(5000);
 }
 
-void motor_lock() {
+void motor_lock(ezButton &limitSwitch) {
   Serial.println("clockwise");
-  myStepper.step(stepsPerRevolution);
-  delay(500);
+
+  while (limitSwitch.getState() == HIGH) {
+    myStepper.step(1);
+    limitSwitch.loop();
+    delay(5);
+  }
 }
 
 void motor_unlock() {

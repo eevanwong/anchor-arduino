@@ -4,9 +4,15 @@
 #include "wifi_handler.h"
 #include "motor_handler.h"
 #include "light_handler.h"
+#include <esp_sleep.h>
+#include <ezButton.h>
 
+// ------------------------------------------
+// Constants & Global Variables
+// ------------------------------------------
 uint8_t LOCK_STATE = 0; // 0 - not locked
 
+ezButton limitSwitch(19); // Limit switch pin
 // ------------------------------------------
 // Setup Function
 // ------------------------------------------
@@ -21,6 +27,9 @@ void setup() {
 
   // Configure external wake-up
   esp_sleep_enable_ext0_wakeup(WAKEUP_GPIO, LOW); // 0 = Low, 1 = High
+
+  // Set limit switch debounce time.
+  limitSwitch.setDebounceTime(50);
 
   // Attempt to read a card UID - Assume tag is Mifare Classic Card
   uint8_t uid[7] = {0};   // Buffer to store the UID
@@ -58,7 +67,7 @@ void setup() {
             // Serial.printf(F("User ID: %d\n"), res.user_id);
             Serial.printf(F("Lock Success: %s\n"), res.lock_success ? "true" : "false");
             LOCK_STATE = 1;
-            motor_lock();
+            motor_lock(limitSwitch);
           }
         } else {
           UnlockRequest req = {1, "John Doe", "johndoe@gmail.com", "1234561234"};
