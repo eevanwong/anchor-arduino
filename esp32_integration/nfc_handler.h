@@ -5,7 +5,7 @@
 #include <PN532_I2C.h>
 #include <PN532.h>
 
-#define WAKEUP_GPIO GPIO_NUM_15  // RTC IO pin for wake-up
+#define WAKEUP_GPIO GPIO_NUM_32  // RTC IO pin for wake-up
 
 // Declare NFC-related objects
 extern PN532_I2C pn532i2c;
