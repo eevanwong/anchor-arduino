@@ -12,7 +12,8 @@
 // ------------------------------------------
 uint8_t LOCK_STATE = 0; // 0 - not locked
 
-ezButton limitSwitch(19); // Limit switch pin
+ezButton limitSwitch(LIMIT_SWITCH); // Limit switch pin
+
 // ------------------------------------------
 // Setup Function
 // ------------------------------------------
@@ -86,7 +87,7 @@ void setup() {
         if (res.error == "") {
         } else {
           Serial.println("Locking motor");
-          activate_motor();
+          motor_lock(limitSwitch);
           toggleRed();
         }
         toggleGreen();

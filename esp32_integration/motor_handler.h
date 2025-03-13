@@ -12,6 +12,8 @@ const int Mosfet = 25;    // the number of the LED pin
 #define IN2_PIN GPIO_NUM_12
 #define IN3_PIN GPIO_NUM_14
 #define IN4_PIN GPIO_NUM_27
+#define LIMIT_SWITCH GPIO_NUM_15
+#define PEDO_BUZZER GPIO_NUM_2
 
 void motor_unlock();
 void motor_lock(ezButton &limitSwitch);
