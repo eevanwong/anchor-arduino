@@ -3,8 +3,9 @@
 #include <Stepper.h>
 
 const int stepsPerRevolution = 200;  // change this to fit the number of steps per revolution
-const int Mosfet =  13;    // the number of the LED pin
+const int Mosfet = 25;    // the number of the LED pin
 
+#define MOSFET GPIO_NUM_25
 #define IN1_PIN GPIO_NUM_13
 #define IN2_PIN GPIO_NUM_12
 #define IN3_PIN GPIO_NUM_14
