@@ -42,6 +42,7 @@ void setup() {
     success = pn532temp.mifareclassic_AuthenticateBlock(uid, uidLength, 0, 0, keya);
     if (success) {
       // Trigger light LED - yellow -> loading
+      // yellowOn();
       Serial.println(F("Authenticated block 0 (Sector 0) successfully!"));
       Serial.println("Sector 1 (Blocks 4..7) has been authenticated");
       uint8_t data[16];
@@ -87,10 +88,11 @@ void setup() {
         if (res.error == "") {
         } else {
           Serial.println("Locking motor");
+          toggleGreen();
           motor_lock(limitSwitch);
-          toggleRed();
+          greenOff();
         }
-        toggleGreen();
+        // toggleGreen();
 
       } else {
 
@@ -100,6 +102,8 @@ void setup() {
     } else {
       Serial.println(F("Authentication failed"));
     }
+
+    yellowOff();
   } else {
     Serial.println(F("Card not found"));
   }

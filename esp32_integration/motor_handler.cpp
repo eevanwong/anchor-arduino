@@ -10,6 +10,7 @@ void setupMotor() {
   pinMode(2, INPUT);
   digitalWrite(2, HIGH);
   pinMode(PEDO_BUZZER, OUTPUT);
+  digitalWrite(PEDO_BUZZER, LOW);
   // digitalWrite(MOSFET, HIGH);
   // myStepper.step(1);
   // digitalWrite(MOSFET, LOW);
@@ -31,10 +32,10 @@ void motor_lock(ezButton &limitSwitch) {
   Serial.println("Start");
   Serial.println(limitSwitch.getState());
   while (limitSwitch.getState() == HIGH) {
-    myStepper.step(100);
+    myStepper.step(200);
     limitSwitch.loop();
     Serial.println(limitSwitch.getState());
-    delay(5000);
+    delay(1000);
   }
   tone(PEDO_BUZZER, 1000); // Send 1KHz sound signal...
   delay(1000);         // ...for 1 sec
