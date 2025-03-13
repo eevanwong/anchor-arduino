@@ -1,12 +1,15 @@
 #include <Arduino.h>
 #include "motor_handler.h"
 
-Stepper myStepper = Stepper(stepsPerRevolution, 16, 17, 5, 18);
+Stepper myStepper(stepsPerRevolution, IN1_PIN, IN3_PIN, IN2_PIN, IN4_PIN);
 
 void setupMotor() {
   delay(1000);
   myStepper.setSpeed(60);
-  pinMode(Mosfet, OUTPUT);
+  pinMode(MOSFET, OUTPUT);
+  // digitalWrite(MOSFET, HIGH);
+  // myStepper.step(1);
+  // digitalWrite(MOSFET, LOW);
 }
 
 void activate_motor() {

@@ -3,27 +3,34 @@
 
 void initializeLED() {
   // initialize digital pins for green, yellow, and red
-  pinMode(G_PIN, OUTPUT);
-  pinMode(Y_PIN, OUTPUT);
-  pinMode(R_PIN, OUTPUT);
+  pinMode(RGB_R_PIN, OUTPUT);
+  pinMode(RGB_G_PIN, OUTPUT);
+  pinMode(RGB_B_PIN, OUTPUT);
+  pinMode(RED_R_PIN, OUTPUT);
 }
-
+//
 void yellowOn() {
-    digitalWrite(Y_PIN, HIGH);
+    setColour(255, 255, 0);
 }
 
 void yellowOff() {
-    digitalWrite(Y_PIN, LOW);
+    setColour(0, 0, 0);
 }
 
 void toggleGreen() {
-    digitalWrite(G_PIN, HIGH);
-    delay(1000); 
-    digitalWrite(G_PIN, LOW);
+    setColour(0, 255, 0);
+    delay(2000); 
+    setColour(0, 0, 0);
 }
 
 void toggleRed() {
-    digitalWrite(R_PIN, HIGH);  // turn the LED on (HIGH is the voltage level)
-    delay(1000); 
-    digitalWrite(R_PIN, LOW);
+    digitalWrite(RED_R_PIN, HIGH);  // turn the LED on (HIGH is the voltage level)
+    delay(2000); 
+    digitalWrite(RED_R_PIN, LOW);
+}
+
+void setColour(int red, int green, int blue) {
+  analogWrite(RGB_R_PIN, red);
+  analogWrite(RGB_G_PIN, green);
+  analogWrite(RGB_B_PIN, blue);
 }
