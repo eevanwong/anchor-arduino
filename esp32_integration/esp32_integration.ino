@@ -20,8 +20,7 @@ ezButton limitSwitch(LIMIT_SWITCH); // Limit switch pin
 void setup() {
   Serial.begin(115200);
   // Connect to WiFi.
-  // ConnectToNetwork();
-  
+  connectToNetwork();
   initializeNFC();
   setupMotor();  
   initializeLED();
@@ -35,33 +34,41 @@ void setup() {
   // Attempt to read a card UID - Assume tag is Mifare Classic Card
   uint8_t uid[7] = {0};   // Buffer to store the UID
   uint8_t uidLength = 0;  // Will be set by readNFCCard()
-  bool success = readCardUID(uid, uidLength);
+  bool card_detected = readCardUID(uid, uidLength);
   
-  if (success) {
+  if (card_detected) {
     uint8_t keya[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-    success = pn532temp.mifareclassic_AuthenticateBlock(uid, uidLength, 0, 0, keya);
-    if (success) {
+    uint8_t block_authenticated = pn532temp.mifareclassic_AuthenticateBlock(uid, uidLength, 4, 0, keya);
+    if (block_authenticated) {
       // Trigger light LED - yellow -> loading
-      // yellowOn();
-      Serial.println(F("Authenticated block 0 (Sector 0) successfully!"));
+//      Serial.println(F("Authenticated block 0 (Sector 0) successfully!"));
       Serial.println("Sector 1 (Blocks 4..7) has been authenticated");
       uint8_t data[16];
-        
-      // Try to read the contents of block 4
-      success = pn532temp.mifareclassic_ReadDataBlock(0, data);
-    
-      if (success) {
-        pn532temp.inRelease(0);
 
-        // Serial.println(F("Reading Block 0:"));
+      // Try to read the contents of block 4
+      uint8_t block_read = pn532temp.mifareclassic_ReadDataBlock(4, data);
+
+      if (block_read) {
+        pn532temp.inRelease(0); // nfc will not read past this LOC
+
+        Serial.println(F("Reading Block 0:"));
         pn532temp.PrintHexChar(data, 16);
         Serial.println();
-                  
+
+        // convert to a string
+        char email[33]; // 32 characters + 1 for null terminator
+        for (uint8_t i = 0; i < 16; i++) {
+            sprintf(email + i * 2, "%02X", data[i]);
+        }
+        email[32] = '\0'; // Ensure null termination
+        
+        Serial.println(email);
+
         /// HERE -> WIFI REQUEST BASED ON LOCK STATE
         LockResponse res;
         if (LOCK_STATE == 0) {
           Serial.println(F("Locking Bike at Rack 1..."));
-          LockRequest req = {1, "John Doe", "johndoe@gmail.com", "1234561234"};
+          LockRequest req = {1, "NULL", email, "NULL"};
           res = lock(req);
     
           if (res.error == "") {
@@ -72,7 +79,7 @@ void setup() {
             motor_lock(limitSwitch);
           }
         } else {
-          UnlockRequest req = {1, "John Doe", "johndoe@gmail.com", "1234561234"};
+          UnlockRequest req = {1, "NULL", email, "NULL"};
           UnlockResponse res = unlock(req);
           if (res.error == "") {
             // Serial.printf(F("Rack ID: %d\n"), res.rack_id);
@@ -86,14 +93,11 @@ void setup() {
         /// WIFI REQUEST COMPONENT END
         // if err -> red light flashes
         if (res.error == "") {
-        } else {
           Serial.println("Locking motor");
-          toggleGreen();
           motor_lock(limitSwitch);
-          greenOff();
+          toggleRed();
         }
-        // toggleGreen();
-
+        toggleGreen();          
       } else {
 
         // at any failure activate red light (should be a function)
@@ -102,8 +106,6 @@ void setup() {
     } else {
       Serial.println(F("Authentication failed"));
     }
-
-    yellowOff();
   } else {
     Serial.println(F("Card not found"));
   }

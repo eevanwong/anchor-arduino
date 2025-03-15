@@ -99,15 +99,15 @@ LockResponse lock(const LockRequest& request) {
 
   // Prepare HTTP request
   HTTPClient http;
-  http.begin("http://192.168.0.223:8080/api/lock");
+  http.begin("http://10.64.145.165:8080/api/lock");
   http.addHeader("Content-Type", "application/json");
 
   // Build JSON payload
   DynamicJsonDocument doc(256);
   doc["rack_id"]    = request.rack_id;
-  doc["user_name"]  = request.user_name;
+//  doc["user_name"]  = request.user_name;
   doc["user_email"] = request.user_email;
-  doc["user_phone"] = request.user_phone;
+//  doc["user_phone"] = request.user_phone;
 
   String payload;
   serializeJson(doc, payload);
@@ -156,15 +156,15 @@ UnlockResponse unlock(const UnlockRequest& request) {
 
   // Prepare HTTP request
   HTTPClient http;
-  http.begin("http://192.168.0.223:8080/api/unlock");
+  http.begin("http://10.64.145.165:8080/api/unlock");
   http.addHeader("Content-Type", "application/json");
 
   // Build JSON payload
   DynamicJsonDocument doc(256);
   doc["rack_id"]    = request.rack_id;
-  doc["user_name"]  = request.user_name;
+//  doc["user_name"]  = request.user_name;
   doc["user_email"] = request.user_email;
-  doc["user_phone"] = request.user_phone;
+//  doc["user_phone"] = request.user_phone;
 
   String payload;
   serializeJson(doc, payload);
