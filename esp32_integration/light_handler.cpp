@@ -19,7 +19,9 @@ void yellowOff() {
 
 void toggleGreen() {
     setColour(0, 255, 0);
-    delay(2000); 
+}
+
+void greenOff() {
     setColour(0, 0, 0);
 }
 

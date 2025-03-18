@@ -12,6 +12,7 @@
 // Private (static) helper functions
 // ---------------------------------------------------------------------
 
+String laptop_addr = "10.64.145.49";
 // Pad the payload to match AES block size (16 bytes)
 static String padPayload(String payload) {
   size_t blockSize = 16;
@@ -99,7 +100,7 @@ LockResponse lock(const LockRequest& request) {
 
   // Prepare HTTP request
   HTTPClient http;
-  http.begin("http://192.168.0.223:8080/api/lock");
+  http.begin("http://" + laptop_addr + ":8080/api/lock");
   http.addHeader("Content-Type", "application/json");
 
   // Build JSON payload
@@ -156,7 +157,7 @@ UnlockResponse unlock(const UnlockRequest& request) {
 
   // Prepare HTTP request
   HTTPClient http;
-  http.begin("http://192.168.0.223:8080/api/unlock");
+  http.begin("http://" + laptop_addr + ":8080/api/unlock");
   http.addHeader("Content-Type", "application/json");
 
   // Build JSON payload
