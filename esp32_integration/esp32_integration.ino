@@ -9,7 +9,6 @@
 void setup() {
   Serial.begin(115200);
   // Connect to WiFi.
-  connectToNetwork();
   initializeNFC();
   setupMotor();  
   setupBuzzer();
@@ -32,13 +31,15 @@ void setup() {
       Serial.println("Sector 1 (Blocks 4..7) has been authenticated");
       uint8_t data[14];
 
-      tapCardTune();
 
       // Try to read the contents of block 4
       uint8_t block_read = pn532.mifareclassic_ReadDataBlock(4, data);
-
+      tapCardTune();
+      yellowOn();
+      
       if (block_read) {
         pn532.inRelease(0); // nfc will not read past this LOC
+        connectToNetwork();
 
         Serial.println(F("Reading Block 0:"));
         pn532.PrintHexChar(data, 14);
@@ -64,18 +65,21 @@ void setup() {
             Serial.printf(F("Lock Success: %s\n"), res.lock_success ? "true" : "false");
             LOCK_STATE = LOCKED;
             motor_lock();
+            greenOn();
             successTune();
           }
         } else {
           Serial.println(F("Unlocking Bike at Rack 1..."));
           UnlockRequest req = {1, "test", email, "test"};
           UnlockResponse res = unlock(req);
+          Serial.println(res.error);
           if (res.error == "") {
             // Serial.printf(F("Rack ID: %d\n"), res.rack_id);
             // Serial.printf(F("User ID: %d\n"), res.user_id);
             Serial.printf(F("Unlock Success: %s\n"), res.unlock_success ? "true" : "false");
             LOCK_STATE = UNLOCKED;
             motor_unlock();
+            greenOn();
             successTune();
           }
         }
@@ -83,18 +87,29 @@ void setup() {
         if (res.error != "") {
           Serial.printf("ERROR :%s \n", res.error);
           failureTune();
+          yellowOff();
+          redOn();
         }
-        
+       
       } else {
         // at any failure activate red light (should be a function)
         Serial.println(F("Read failed"));
+        failureTune();
+        redOn();
       }
+
     } else {
       Serial.println(F("Authentication failed"));
+      failureTune();
+      redOn();
     }
   } else {
     Serial.println(F("Card not found"));
   }
+  
+
+  greenOpenOff();
+  redOff();
 
   // Sstart detection again (will not finish before deep sleep)
   if (startCardDetection()) {

@@ -37,24 +37,28 @@ void activate_motor() {
 void motor_lock() {
   delay(1000);
   Serial.println("Lock start");
+  digitalWrite(Mosfet, HIGH);
   Serial.println(limitSwitch.getState());
   while (limitSwitch.getState() == HIGH) {
-    myStepper.step(200);
+    myStepper.step(400);
     limitSwitch.loop();
     Serial.println(limitSwitch.getState());
     delay(1000);
   }
+  digitalWrite(Mosfet, LOW);
   delay(1000);         // ...for 1 sec
 }
 
 void motor_unlock() {
   delay(1000);
   Serial.println("unlock start");
+  digitalWrite(Mosfet, HIGH);
   while (limitSwitch.getState() == LOW) {
-    myStepper.step(200);
+    myStepper.step(400);
     limitSwitch.loop();
     Serial.println(limitSwitch.getState());
     delay(1000);
   }
+  digitalWrite(Mosfet, LOW);
   delay(1000);
 }

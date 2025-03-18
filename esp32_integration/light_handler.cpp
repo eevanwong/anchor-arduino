@@ -10,25 +10,43 @@ void initializeLED() {
 }
 //
 void yellowOn() {
-    setColour(255, 255, 0);
+    delay(500);
+    setColour(128, 0, 128);
 }
 
 void yellowOff() {
+    delay(500);
     setColour(0, 0, 0);
 }
 
-void toggleGreen() {
-    setColour(0, 255, 0);
+void redOn() {
+    delay(500);
+    setColour(255, 0, 0);
+}
+
+void redOff() {
+    delay(500);
+    setColour(0, 0, 0);
+}
+
+void greenOn() {
+  delay(500);
+  setColour(0, 255, 0);
 }
 
 void greenOff() {
-    setColour(0, 0, 0);
+  delay(500);
+  setColour(0, 255, 0); 
 }
 
-void toggleRed() {
-    digitalWrite(RED_R_PIN, HIGH);  // turn the LED on (HIGH is the voltage level)
-    delay(2000); 
-    digitalWrite(RED_R_PIN, LOW);
+void greenOpenOn() {
+  delay(500);
+  digitalWrite(RED_R_PIN, HIGH);  // turn the LED on (HIGH is the voltage level)
+}
+
+void greenOpenOff() {
+  delay(500);
+  digitalWrite(RED_R_PIN, LOW);  // turn the LED on (HIGH is the voltage level)
 }
 
 void setColour(int red, int green, int blue) {

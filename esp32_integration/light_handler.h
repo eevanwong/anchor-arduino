@@ -15,9 +15,12 @@ void initializeLED();
 // need to update these
 void yellowOn();
 void yellowOff();
-void toggleGreen();
+void greenOn();
 void greenOff();
-void toggleRed();
+void redOn();
+void redOff();
+void greenOpenOn();
+void greenOpenOff();
 void setColour(int red, int green, int blue);
 
 #endif // LIGHT_HANDLER_H
