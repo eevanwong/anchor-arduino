@@ -10,12 +10,13 @@
 // Declare NFC-related objects
 extern PN532_I2C pn532i2c;
 //extern NfcAdapter nfcAdapter;
-extern PN532 pn532temp;
+extern PN532 pn532;
 
 
 // Function declarations
 void initializeNFC();
 bool readCardUID(uint8_t* uid, uint8_t& uidLength);
 bool startCardDetection();
+String uint8ArrayToHexString(uint8_t* data, size_t len);
 
 #endif // NFC_HANDLER_H
