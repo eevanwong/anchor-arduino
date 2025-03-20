@@ -25,7 +25,6 @@ void initializeNFC() {
 
     pn532.setPassiveActivationRetries(0xFF); // Ensure reliable activation
     pn532.SAMConfig();                       // Configure the SAM
-    
     pinMode(WAKEUP_GPIO, INPUT);  // For interrupt
 }
 

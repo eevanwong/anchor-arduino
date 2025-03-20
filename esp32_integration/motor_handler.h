@@ -7,7 +7,8 @@
 const int stepsPerRevolution = 200;  // change this to fit the number of steps per revolution
 const int Mosfet = 25;    // the number of the LED pin
 
-extern int LOCK_STATE; // declaration only
+extern int LOCK_STATE;
+//extern int LOCK_STATE; // declaration only
 extern ezButton limitSwitch; // declaration only (note: you'll need to adjust how you construct it)
 
 #define LOCKED 1

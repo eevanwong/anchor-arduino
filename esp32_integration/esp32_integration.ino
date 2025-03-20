@@ -7,8 +7,14 @@
 #include "buzzer_handler.h"
 
 void setup() {
-  Serial.begin(115200);
-  // Connect to WiFi.
+//  Serial.begin(115200);
+
+  if (LOCK_STATE == UNLOCKED) {
+    greenOpenOn();
+  } else {
+    greenOpenOff();
+  }
+
   initializeNFC();
   setupMotor();  
   setupBuzzer();
@@ -28,7 +34,7 @@ void setup() {
     if (block_authenticated) {
       // Trigger light LED - yellow -> loading
 //      Serial.println(F("Authenticated block 0 (Sector 0) successfully!"));
-      Serial.println("Sector 1 (Blocks 4..7) has been authenticated");
+//      Serial.println("Sector 1 (Blocks 4..7) has been authenticated");
       uint8_t data[14];
 
 
@@ -41,9 +47,9 @@ void setup() {
         pn532.inRelease(0); // nfc will not read past this LOC
         connectToNetwork();
 
-        Serial.println(F("Reading Block 0:"));
-        pn532.PrintHexChar(data, 14);
-        Serial.println();
+//        Serial.println(F("Reading Block 0:"));
+//        pn532.PrintHexChar(data, 14);
+//        Serial.println();
 
         // convert to a string
         char emailStr[15];  // 14 bytes for data + 1 for the null terminator
@@ -55,28 +61,28 @@ void setup() {
         LockResponse res;
         
         if (LOCK_STATE == UNLOCKED) {
-          Serial.println(F("Locking Bike at Rack 1..."));
+//          Serial.println(F("Locking Bike at Rack 1..."));
           LockRequest req = {1, "test", email, "test"};
           res = lock(req);
     
           if (res.error == "") {
             // Serial.printf(F("Rack ID: %d\n"), res.rack_id);
             // Serial.printf(F("User ID: %d\n"), res.user_id);
-            Serial.printf(F("Lock Success: %s\n"), res.lock_success ? "true" : "false");
+//            Serial.printf(F("Lock Success: %s\n"), res.lock_success ? "true" : "false");
             LOCK_STATE = LOCKED;
             motor_lock();
             greenOn();
             successTune();
           }
         } else {
-          Serial.println(F("Unlocking Bike at Rack 1..."));
+//          Serial.println(F("Unlocking Bike at Rack 1..."));
           UnlockRequest req = {1, "test", email, "test"};
           UnlockResponse res = unlock(req);
-          Serial.println(res.error);
+//          Serial.println(res.error);
           if (res.error == "") {
             // Serial.printf(F("Rack ID: %d\n"), res.rack_id);
             // Serial.printf(F("User ID: %d\n"), res.user_id);
-            Serial.printf(F("Unlock Success: %s\n"), res.unlock_success ? "true" : "false");
+//            Serial.printf(F("Unlock Success: %s\n"), res.unlock_success ? "true" : "false");
             LOCK_STATE = UNLOCKED;
             motor_unlock();
             greenOn();
@@ -85,7 +91,7 @@ void setup() {
         }
 
         if (res.error != "") {
-          Serial.printf("ERROR :%s \n", res.error);
+//          Serial.printf("ERROR :%s \n", res.error);
           failureTune();
           yellowOff();
           redOn();
@@ -93,34 +99,29 @@ void setup() {
        
       } else {
         // at any failure activate red light (should be a function)
-        Serial.println(F("Read failed"));
+//        Serial.println(F("Read failed"));
         failureTune();
         redOn();
       }
 
     } else {
-      Serial.println(F("Authentication failed"));
+//      Serial.println(F("Authentication failed"));
       failureTune();
       redOn();
     }
   } else {
-    Serial.println(F("Card not found"));
+//    Serial.println(F("Card not found"));
   }
   
 
   greenOpenOff();
   redOff();
 
-  // Sstart detection again (will not finish before deep sleep)
-  if (startCardDetection()) {
-    Serial.println(F("Started passive target detection"));
-  } else {
-    Serial.println(F("Failed to start passive target detection"));
-  }
+  startCardDetection();
 
   // Go to sleep
-  Serial.println("Going to sleep now...");
-  Serial.flush();
+//  Serial.println("Going to sleep now...");
+//  Serial.flush();
   delay(500);
 
   esp_deep_sleep_start();

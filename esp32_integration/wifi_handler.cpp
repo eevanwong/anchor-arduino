@@ -71,18 +71,18 @@ void connectToNetwork() {
   static const char* password = "test123!";
   
   WiFi.begin(ssid, password);
-  Serial.print("Connecting to WiFi...");
+//  Serial.print("Connecting to WiFi...");
   unsigned long startTime = millis();
 
   while (WiFi.status() != WL_CONNECTED) {
     if (millis() - startTime > 10000) {
-      Serial.println("Network connection timed out!");
+//      Serial.println("Network connection timed out!");
       return;
     }
     delay(500);
-    Serial.print(".");
+//    Serial.print(".");
   }
-  Serial.println("\nNetwork connection success!");
+//  Serial.println("\nNetwork connection success!");
 }
 
 // Function to lock a bike
@@ -94,7 +94,7 @@ LockResponse lock(const LockRequest& request) {
 
   if (WiFi.status() != WL_CONNECTED) {
     res.error = "Network connection lost!";
-    Serial.println(res.error);
+//    Serial.println(res.error);
     return res;
   }
 
@@ -118,7 +118,7 @@ LockResponse lock(const LockRequest& request) {
   int httpResponseCode = http.POST(encryptedPayload);
   if (httpResponseCode <= 0) {
     res.error = http.errorToString(httpResponseCode);
-    Serial.printf("HTTP Error: %s\n", res.error.c_str());
+    // Serial.printf("HTTP Error: %s\n", res.error.c_str());
     http.end();
     return res;
   }
@@ -134,11 +134,11 @@ LockResponse lock(const LockRequest& request) {
       res.lock_success = resDoc["lock_success"];
     } else {
       res.error = "JSON Parsing Error: " + String(error.c_str());
-      Serial.println(res.error);
+//      Serial.println(res.error);
     }
   } else {
     res.error = response;
-    Serial.println(res.error);
+//    Serial.println(res.error);
   }
 
   http.end();
@@ -151,7 +151,7 @@ UnlockResponse unlock(const UnlockRequest& request) {
 
   if (WiFi.status() != WL_CONNECTED) {
     res.error = "Network connection lost!";
-    Serial.println(res.error);
+//    Serial.println(res.error);
     return res;
   }
 
@@ -177,7 +177,7 @@ UnlockResponse unlock(const UnlockRequest& request) {
     res.error = http.errorToString(httpResponseCode);
 
     #ifdef DEBUG
-      Serial.printf("HTTP Error: %s\n", res.error.c_str());
+//      Serial.printf("HTTP Error: %s\n", res.error.c_str());
     #endif
     
     http.end();
@@ -196,14 +196,14 @@ UnlockResponse unlock(const UnlockRequest& request) {
     } else {
       res.error = "JSON Parsing Error: " + String(error.c_str());
       #ifdef DEBUG
-        Serial.println(res.error);
+//        Serial.println(res.error);
       #endif
     }
   } else {
     res.error = response;
 
     #ifdef DEBUG
-      Serial.println(res.error);
+//      Serial.println(res.error);
     #endif
   }
 
